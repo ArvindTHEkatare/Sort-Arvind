@@ -1,9 +1,10 @@
-#de olika moduler som vi kommer använda.. vi importerar basic_bubble_sort filen som bs
+#de olika moduler som vi kommer använda.. vi importerar heap_sort filen som hs
 import PySimpleGUI as sg
-import basic_bubble_sort as bs
+import heap_sort as hs
 import pandas as pd
 import time 
 import random
+
 
 # Lista över alla tillgängliga PySimpleGUI-teman
 tema = sg.theme_list()
@@ -66,7 +67,7 @@ def gui():
         # Om vi trycker på exit eller stänger verkytg, sluta programmet
         if event == sg.WINDOW_CLOSED or event == 'Exit':
             break
-        # Om vi trycker på sortera, sortera listan genom att använda funktionen i basic_bubble_sort.py filen
+        # Om vi trycker på sortera, sortera listan genom att använda funktionen i heap_sort.py filen
         elif event == 'Sortera':
             # Input värde sparade som inputs.
             inputs = values['-INPUT-'].strip()
@@ -77,10 +78,10 @@ def gui():
                     print("Sorting började vid:\n", start_tid)
                     # själva hanteraren för elemenets, en för loop finns och vi ska separera de olika värde med hjälp av en kommatecken
                     elements = [int(x.strip()) for x in inputs.split(',')]
-                    # här kommer vi använda själva heap sort algoritm som jag skrev i basic_bubble_sort.py filen.
+                    # här kommer vi använda själva heap sort algoritm som jag skrev i heap_sort.py filen.
                     if elements:
                         # Ska använda en copy av elements, anledningen till denna är att om vi gör inte en copy, de sorterade kommer visa osorterade istället. 
-                        sorterade_värde = bs.bubblesort(elements.copy())
+                        sorterade_värde = hs.heap_sort(elements.copy())
                         slut_tid = time.perf_counter()  # stoppa timer eller stopwatchen när sortering är klar
                         print("Sorting slutade vid:\n", slut_tid)
                         total_tid = slut_tid - start_tid  # total_tid är så klart slut tid - start tid
@@ -92,14 +93,14 @@ def gui():
                         # popup up, var man kan välja mellan att ha dubbletter i grafen eller inte 
                         if dubbletter == 'Yes':
                             # Rita/visa grafen med dubbletter
-                            bs.plot(elements, sorterade_värde, total_tid, values['-graph-type_combo-'])
+                            hs.plot(elements, sorterade_värde, total_tid, values['-graph-type_combo-'])
                         else:
                             # Ta bort dubbletter med bibehållen ordning
                             unik_sorterade_värde = []
                             # lägger till varje unikt element från sorterade_värde TILL unika_sorterade_värden om det inte redan finns där..
                             [unik_sorterade_värde.append(x) for x in sorterade_värde if x not in unik_sorterade_värde]
                             # rita/visa grafen utan dubbletter (för sorterade delen)
-                            bs.plot(elements, unik_sorterade_värde, total_tid, values['-graph-type_combo-'])
+                            hs.plot(elements, unik_sorterade_värde, total_tid, values['-graph-type_combo-'])
 
                         # Visa tid  i en  popup fönster bara upp till 6 decimaltecken
                         sg.popup(f'Total tid som behövdes för att sortera är  {total_tid:.6f} sekunder', title='Sorteringstid')

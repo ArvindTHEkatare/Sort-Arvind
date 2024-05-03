@@ -1,26 +1,43 @@
-#importera de olika moduler som vi kommer använda
 import matplotlib.pyplot as plt
-import PySimpleGUI as sg
-import time 
+
+# funktionen heap_sort, koden under kommer att sortera en lista med nummer med hjälp av "heap sort" algoritmen
+def heap_sort(arr):
+    n = len(arr)
+
+    # bygg en max-heap
+    for i in range(n // 2 - 1, -1, -1):
+        heapify(arr, n, i)
+
+    # extrahera element från heapen ett efter ett
+    for i in range(n - 1, 0, -1):
+        arr[i], arr[0] = arr[0], arr[i]  # byt plats på det största elementet (roten) med det sista elementet
+        heapify(arr, i, 0)  # anropa heapify på den reducerade heapen
+
+    return arr  # returnera den sorterade listan
 
 
-#funktionen bubblesort, koden under kommer sortera en lista med nummer på "bubble sort" sättet
-def bubblesort(elements):
-    # Yttre loop som går igenom listan från slutet till början.
-    for n in range(len(elements)-1, 0, -1):
-        byta = False #en sorts indikator som indikerar om byten gjorts under en iteration
-        # Mer av en inre loop som går igenom listan från början till näst sista elementet.
-        for i in range(n):
-            # Jämför varje element med sitt nästa element,  och byt plats på de om de är i fel ordning. (dvs om talen innan är större än talen efteer)
-            if elements[i] > elements[i + 1]:
-                byta = True
-                elements[i], elements[i + 1] = elements[i + 1], elements[i]
+# funktionen heapify, koden under hjälper till att ordna om en del av heapen för att upprätthålla dess egenskap
+def heapify(arr, n, i):
+    störst = i  # initialisera störst till roten
+    l = 2 * i + 1  # vänster = 2*i + 1
+    r = 2 * i + 2  # höger = 2*i + 2
 
-        #om inga byten gjorts, är listan redan sorterad så loopen kan avslutas efter
-        if not byta:
-            break  
-    return elements  
+    # om vänster barn är större än roten
+    if l < n and arr[l] > arr[störst]:
+        störst = l
 
+    # om höger barn är större än störst hittills
+    if r < n and arr[r] > arr[störst]:
+        störst = r
+
+    # byt roten om det behövs
+    if störst != i:
+        arr[i], arr[störst] = arr[störst], arr[i]  # byt plats
+
+        # utför heapify på roten.
+        heapify(arr, n, störst)
+
+        
 # en funktion för diagram av olika sorts, kommer använda oss av matplotlib
 def plot(elements, sorterade_värde, total_tid, graph_type):
    
@@ -31,7 +48,7 @@ def plot(elements, sorterade_värde, total_tid, graph_type):
     if graph_type == 'Stapel':
         #rita ett stapel diagram för osorterade listan 
         axes[0].bar(range(len(elements)), elements, color='skyblue')
-    elif graph_type == 'Linje': 
+    elif graph_type == 'Linje':
         #rita ett linje diagram för osorterade listan 
         axes[0].plot(range(len(elements)), elements, color='skyblue')
     elif graph_type == 'Punktdiagram':
@@ -49,7 +66,7 @@ def plot(elements, sorterade_värde, total_tid, graph_type):
         #rita ett linje diagram för sorterade listan 
         axes[1].plot(range(len(sorterade_värde)), sorterade_värde, color='lightgreen')
     elif graph_type == 'Punktdiagram':
-        #rita ett linjediagram för sorterade listan 
+        #rita ett punkt diagram för sorterade listan 
         axes[1].scatter(range(len(sorterade_värde)), sorterade_värde, color='lightgreen')
     axes[1].set_title('Sorterad')#titeln
     axes[1].set_xlabel('Index')#vad x axeln indikerar
@@ -60,7 +77,7 @@ def plot(elements, sorterade_värde, total_tid, graph_type):
     axes[1].text(1.02, 0.5, f'Sorterad Lista:\n{sorterade_värde}', fontsize=16, va='center', transform=axes[1].transAxes)
 
     # Set the overall title
-    fig.suptitle(f'Bubblesort funktionen! :)', fontsize=16)
+    fig.suptitle(f'Heap sort! :)', fontsize=16)
 
     #Undvika overlapping av olika diagramsdelar 
     plt.tight_layout()
@@ -68,4 +85,3 @@ def plot(elements, sorterade_värde, total_tid, graph_type):
     #print, eller skriva ut diagram
     plt.show()
     
-
